@@ -112,17 +112,12 @@ with open("winequality-red.csv", mode="r") as file:
             i += 1
 
 formatted_RedWine_df = pd.DataFrame(formatted_RedWine_dic)
-# formatted_RedWine_df.to_csv("formatted_winequality_red.csv")
-
 
 X = formatted_RedWine_df.drop(columns=['quality'])  # Features
 y = formatted_RedWine_df['quality']
 
 X = X.astype(float)
 y = y.astype(int)
-
-
-# thresholds = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
 y_encoded = np.eye(11)[y]
 
 
@@ -143,10 +138,8 @@ y_test = y_shuffled[-num_test_samples:]
 mean_values = X_train.mean()
 std_dev_values = X_train.std()
 
-# Standardize the training set
-X_train_standardized = (X_train - mean_values) / std_dev_values
 
-# Standardize the testing set using the same mean and standard deviation values
+X_train_standardized = (X_train - mean_values) / std_dev_values
 X_test_standardized = (X_test - mean_values) / std_dev_values
 
 model = NeuralNet_30_Neurons()
