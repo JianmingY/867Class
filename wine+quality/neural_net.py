@@ -4,7 +4,7 @@ import csv
 import matplotlib.pyplot as plt
 
 class NeuralNet_30_Neurons():
-    def __init__(self, N_layer1 = 12, N_layer2 = 8, N_layer3 = 8, N_layer4 = 12):  # defined total 30 hidden neurons
+    def __init__(self, N_layer1 = 16, N_layer2 = 2, N_layer3 = 4, N_layer4 = 8):  # defined total 30 hidden neurons
         super(NeuralNet_30_Neurons,self).__init__()
 
         self.w1 = np.random.random((11, N_layer1))
@@ -118,7 +118,7 @@ class NeuralNet_30_Neurons():
 
 # Defining 1000 iterations
 epochs = 1000
-learning_rate = 0.0008
+learning_rate = 0.0001
 RedWine_df = pd.read_csv("winequality-red.csv")
 formatted_RedWine_dic = {}
 
@@ -188,22 +188,24 @@ loss_train = []
 loss_test = []
 
 for epoch in range(epochs):
+    Combined_mean_Error = 0.00
     for i in range(len(X_train_standardized)):
         # Forward pass
         prediction = model.backward(X_train_standardized.iloc[i], y_train[i], learning_rate)
 
         # Calculate loss
-
+        error = prediction - y_train[i]
+        Combined_mean_Error += (sum(error) / 11) ** 2
         loss = model.loss_function(prediction, y_train[i])
 
     for j in range(len(X_test_standardized)):
         # Forward pass
-        Combined_mean_Error = 0.00
+
         prediction = model.forward(X_test_standardized.iloc[j])
 
 
-        error = (prediction - y_test[j]) ** 2
-        Combined_mean_Error += sum(error) / 11
+
+
         loss_t = model.loss_function(prediction, y_test[j])
 
     loss_test += [loss_t]
@@ -214,7 +216,10 @@ for epoch in range(epochs):
     print(f"Epoch {epoch + 1}/{epochs}, Loss: {loss:.4f}, Test_Error: {model.RMSE(Combined_mean_Error, y_test)}")
 
 plt.plot(loss_train, label="Train")
-plt.plot(loss_test, label="Test")
+plt.title("Train Error Over Epochs - LR = 0.0001")
+# plt.plot(loss_test, label="Test")
+plt.ylabel("Cross-Entropy Loss")
+plt.xlabel("Iterations")
 plt.legend()
 plt.show()
 
